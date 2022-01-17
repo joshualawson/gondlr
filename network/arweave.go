@@ -8,6 +8,7 @@ import (
 type ArweaveNetworkCaller interface {
 	Transaction(id string) (arweave.Transaction, error)
 	TransactionStatus(id string) (arweave.TransactionStatus, error)
+	Info() (arweave.Info, error)
 }
 
 type Arweave struct {
@@ -47,8 +48,12 @@ func (a *Arweave) Tx(transactionID string) (Transaction, error) {
 	}, nil
 }
 
-func (a *Arweave) CurrentHeight() *big.Int {
-	return nil
+func (a *Arweave) CurrentHeight() int {
+	i, err := a.ar.Info()
+	if err != nil {
+		return 0
+	}
+	return i.Height
 }
 
 func (a *Arweave) Fee() *big.Int {
