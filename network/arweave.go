@@ -11,13 +11,22 @@ type ArweaveNetworkCaller interface {
 	Info() (arweave.Info, error)
 }
 
-type Arweave struct {
-	ar         ArweaveNetworkCaller
-	signer     Signer
-	privateKey string
+type ArweaveNetwork struct {
+	ar     ArweaveNetworkCaller
+	signer Signer
 }
 
-func (a *Arweave) Tx(transactionID string) (Transaction, error) {
+func Arweave(signer Signer) *ArweaveNetwork {
+	return &ArweaveNetwork{
+		signer: signer,
+	}
+}
+
+func (a *ArweaveNetwork) Name() string {
+	return "arweave"
+}
+
+func (a *ArweaveNetwork) Tx(transactionID string) (Transaction, error) {
 	t, err := a.ar.Transaction(transactionID)
 	if err != nil {
 		return Transaction{}, ErrorSDK(err)
@@ -48,7 +57,7 @@ func (a *Arweave) Tx(transactionID string) (Transaction, error) {
 	}, nil
 }
 
-func (a *Arweave) CurrentHeight() int {
+func (a *ArweaveNetwork) CurrentHeight() int {
 	i, err := a.ar.Info()
 	if err != nil {
 		return 0
@@ -56,14 +65,18 @@ func (a *Arweave) CurrentHeight() int {
 	return i.Height
 }
 
-func (a *Arweave) Fee() *big.Int {
+func (a *ArweaveNetwork) Fee() *big.Int {
 	return nil
 }
 
-func (a *Arweave) SendTransaction(data interface{}) error {
+func (a *ArweaveNetwork) SendTransaction(data interface{}) error {
 	return nil
 }
 
-func (a *Arweave) CreateTransaction(amount *big.Int, to string) error {
+func (a *ArweaveNetwork) CreateTransaction(amount *big.Int, to string) error {
 	return nil
+}
+
+func (a *ArweaveNetwork) PublicKey() string {
+	return a.signer.PublicKey().String()
 }

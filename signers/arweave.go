@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha256"
+	"encoding/base64"
 	"fmt"
 	"github.com/everFinance/gojwk"
 )
@@ -46,7 +47,7 @@ func Arweave(jwk []byte) (*ArweaveSigner, error) {
 // PublicKey ...
 func (a *ArweaveSigner) PublicKey() PublicKey {
 	s := sha256.Sum256(a.publicKey.N.Bytes())
-	return s[:]
+	return []byte(base64.RawURLEncoding.EncodeToString(s[:]))
 }
 
 // Sign ...
