@@ -1,4 +1,4 @@
-package gondlr
+package wallet
 
 import (
 	"github.com/joshualawson/gondlr/network"
@@ -12,4 +12,5 @@ type Network interface {
 	Fee() *big.Int
 	SendTransaction(data interface{}) error
 	CreateTransaction(amount *big.Int, to string) error
+	PublicKey() string
 }

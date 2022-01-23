@@ -17,16 +17,18 @@ func WithClient(client HTTPClient) Option {
 	}
 }
 
-func WithNetwork(nw string, privateKey string) Option {
+func WithNetwork(nw string, wallet Wallet) Option {
 	return func(g *Gondlr) error {
 		switch nw {
 		case "ethereum":
 		case "arweave":
-			signer, err := signers.Arweave([]byte(privateKey))
+			s, err := signers.Arweave(wallet.PrivateKeyBytes(), wallet.PublicKeyBytes())
 			if err != nil {
 				panic(err)
 			}
-			g.network = network.Arweave(signer)
+			g.network = network.Arweave()
+			g.signer = s
+			g.wallet = wallet
 		case "solana":
 		}
 
@@ -43,13 +45,6 @@ func WithHost(host string) Option {
 
 		g.host = u
 
-		return nil
-	}
-}
-
-func WithWallet(wallet string) Option {
-	return func(g *Gondlr) error {
-		g.wallet = wallet
 		return nil
 	}
 }

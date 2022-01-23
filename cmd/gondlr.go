@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/joshualawson/gondlr"
+	"github.com/joshualawson/gondlr/wallet"
 	log "github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 	"os"
@@ -167,19 +168,23 @@ func main() {
 }
 
 func run(cfg config, cmd command) {
+	var nw gondlr.Wallet
+
 	switch cfg.network {
 	case "arweave":
 		w, err := os.ReadFile(cfg.wallet)
 		if err != nil {
 			panic(err)
 		}
-		cfg.wallet = string(w)
+		nw, err = wallet.Arweave(w)
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	g, err := gondlr.New(
-		gondlr.WithNetwork(cfg.network, cfg.wallet),
+		gondlr.WithNetwork(cfg.network, nw),
 		gondlr.WithHost(cfg.host),
-		gondlr.WithWallet(cfg.wallet),
 	)
 	if err != nil {
 		panic(err)

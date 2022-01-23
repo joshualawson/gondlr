@@ -4,6 +4,7 @@ import (
 	"crypto"
 	"crypto/ed25519"
 	"crypto/rand"
+	"github.com/joshualawson/gondlr/wallet"
 )
 
 type Ed25519Signer struct {
@@ -17,7 +18,7 @@ func Ed25519(privateKey string) *Ed25519Signer {
 }
 
 // PublicKey ...
-func (e *Ed25519Signer) PublicKey() PublicKey {
+func (e *Ed25519Signer) PublicKey() wallet.PublicKey {
 	p := ed25519.PrivateKey(e.privateKey)
 	pubKey := p.Public().(ed25519.PublicKey)
 

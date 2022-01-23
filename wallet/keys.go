@@ -1,4 +1,4 @@
-package signers
+package wallet
 
 type PublicKey []byte
 

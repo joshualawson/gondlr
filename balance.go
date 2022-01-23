@@ -18,11 +18,11 @@ func (g *Gondlr) Balance() (*big.Int, error) {
 		WithFields(log.Fields{
 			"host":      g.host.String(),
 			"network":   g.network.Name(),
-			"publicKey": g.network.PublicKey(),
+			"publicKey": g.wallet.PublicKey(),
 		}).
-		Debugf("GET %saccount/balance/%s?address=%s", g.host.String(), g.network.Name(), g.network.PublicKey())
+		Debugf("GET %saccount/balance/%s?address=%s", g.host.String(), g.network.Name(), g.wallet.PublicKey())
 
-	req, err := http.NewRequest("GET", fmt.Sprintf("%saccount/balance/%s?address=%s", g.host.String(), g.network.Name(), g.network.PublicKey()), nil)
+	req, err := http.NewRequest("GET", fmt.Sprintf("%saccount/balance/%s?address=%s", g.host.String(), g.network.Name(), g.wallet.PublicKey()), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +42,7 @@ func (g *Gondlr) Balance() (*big.Int, error) {
 		WithFields(log.Fields{
 			"host":      g.host.String(),
 			"network":   g.network.Name(),
-			"publicKey": g.network.PublicKey(),
+			"publicKey": g.wallet.PublicKey(),
 			"balance":   bal.balance.String(),
 		}).
 		Debugf("response body: %v", string(body))

@@ -1,4 +1,4 @@
-package signers
+package wallet
 
 import (
 	"github.com/stretchr/testify/assert"

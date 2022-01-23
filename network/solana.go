@@ -3,15 +3,11 @@ package network
 import "math/big"
 
 type SolanaNetwork struct {
-	signer     Signer
 	privateKey string
 }
 
-func Solana(signer Signer, privateKey string) *SolanaNetwork {
-	return &SolanaNetwork{
-		signer:     signer,
-		privateKey: privateKey,
-	}
+func Solana() *SolanaNetwork {
+	return &SolanaNetwork{}
 }
 
 func (a *SolanaNetwork) Name() string {

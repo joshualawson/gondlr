@@ -1,13 +1,12 @@
-package signers
+package wallet
 
 import (
-	"github.com/joshualawson/gondlr/wallet"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
-func TestArweave_Sign(t *testing.T) {
-	var walletJWK = []byte(`{
+func TestArweave(t *testing.T) {
+	var walletJWK = `{
     "p": "5sbDW0jFyxb2ewKkhpAhB2N8Rv-gglD3zWcgCJIcF0Q2vUlWUd07YKvhc6hLQq0FDScoD_E1CkywqYXFSsXu6oTP_dSKpK8wmUhzYDt3CqD2fr0FmoogQXhirxVuTfDKvX0MnwRpQeGR_M-TODGKoTs5tO89xqhwt5N2NsQi-8M",
     "kty": "RSA",
     "q": "zuZMWm1f5YBHYyPtptnMv3oyiUAFbmy7RNKNx3ck0fDuL_9CcpctKeniSlxRoNWxw808XwSmA1HyOERWacnAmbKhJOztKgK_14CqUMNPec86Nyfq6--h-sfUk6O0rmQm34aGflTIIVhStQQ7MSocvBTzNAeYE403s5pwfx2DLN0",
@@ -19,16 +18,7 @@ func TestArweave_Sign(t *testing.T) {
     "alg": "RSA1_5",
     "dq": "lm8Ghx1Ng44Q2bnO2ukzoOlVg0vEZzSxuOmq4qPzZp5aYRWlF7JpyTbgLRcQ1vNpbCd2xNOZbYKQrm6psgNagaZK2pFWI5yaJjPMIirQR43wExh4DBJRYQkYvDxkbAQv64hhk8tLNEuG30zzSN0IxYwqBOOcpGKiZHlfYF1x-hU",
     "n": "uoOMm38LZqcMJbPvrMcjmyIzTHVR1fBaXP6siNjKSXo_SgbX3xiaGTShtPmrb6JIPIhrG43TVvYW5flEWzEM6aJCS7IUULAHPo4AxuLOfze9AH36fcVaV8CGTHT2H7m4ROXOaDSQNUB3iuqI8Qy80x8WIF1zSNzr7--rUp0itKkJpaap04b40Gjl5_Dnr45m7TBw7bGgWLQBdUZ5FYXg3QNXCrIgvTxSFHU_5bTN5nn9cF6Lz2t3Df6jRlOGZ30NMPCyswqXwzLJqKro6Gk6CamBl3_lToB0kcXfjeB2xnkaORqNzcPLntBXXDsOGalEEUE7sU2J-ansqwEmQUHbVw"
-}`)
-	w, err := wallet.Arweave(walletJWK)
+}`
+	_, err := Arweave([]byte(walletJWK))
 	assert.NoError(t, err)
-
-	signer, err := Arweave(w.PrivateKeyBytes(), w.PublicKeyBytes())
-	assert.NoError(t, err)
-
-	data := []byte("test")
-	sig, err := signer.Sign(data)
-	assert.NoError(t, err)
-
-	assert.True(t, signer.Verify(data, sig))
 }

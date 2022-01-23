@@ -2,6 +2,7 @@ package gondlr
 
 import (
 	"fmt"
+	"github.com/joshualawson/gondlr/wallet"
 	"net/http"
 	"net/url"
 	"os"
@@ -11,11 +12,19 @@ type HTTPClient interface {
 	Do(req *http.Request) (*http.Response, error)
 }
 
+type Wallet interface {
+	PublicKeyBytes() []byte
+	PrivateKeyBytes() []byte
+	PublicKey() wallet.PublicKey
+	PrivateKey() wallet.PrivateKey
+}
+
 type Gondlr struct {
 	httpClient HTTPClient
 	host       *url.URL
 	network    Network
-	wallet     string // Change this to a wallet implementation
+	wallet     Wallet
+	signer     Signer
 }
 
 func New(opts ...Option) (*Gondlr, error) {

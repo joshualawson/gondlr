@@ -4,6 +4,7 @@ import (
 	"crypto/ecdsa"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/joshualawson/gondlr/wallet"
 	"golang.org/x/crypto/sha3"
 	"log"
 )
@@ -24,7 +25,7 @@ func Ethereum(privateKey string) (*EthereumSigner, error) {
 }
 
 // PublicKey ...
-func (e *EthereumSigner) PublicKey() PublicKey {
+func (e *EthereumSigner) PublicKey() wallet.PublicKey {
 	publicKey := e.privateKey.Public()
 	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
 	if !ok {

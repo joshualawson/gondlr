@@ -12,14 +12,11 @@ type ArweaveNetworkCaller interface {
 }
 
 type ArweaveNetwork struct {
-	ar     ArweaveNetworkCaller
-	signer Signer
+	ar ArweaveNetworkCaller
 }
 
-func Arweave(signer Signer) *ArweaveNetwork {
-	return &ArweaveNetwork{
-		signer: signer,
-	}
+func Arweave() *ArweaveNetwork {
+	return &ArweaveNetwork{}
 }
 
 func (a *ArweaveNetwork) Name() string {
@@ -75,8 +72,4 @@ func (a *ArweaveNetwork) SendTransaction(data interface{}) error {
 
 func (a *ArweaveNetwork) CreateTransaction(amount *big.Int, to string) error {
 	return nil
-}
-
-func (a *ArweaveNetwork) PublicKey() string {
-	return a.signer.PublicKey().String()
 }

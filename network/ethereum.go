@@ -3,15 +3,11 @@ package network
 import "math/big"
 
 type EthereumNetwork struct {
-	signer     Signer
 	privateKey string
 }
 
-func Ethereum(signer Signer, privateKey string) *EthereumNetwork {
-	return &EthereumNetwork{
-		signer:     signer,
-		privateKey: privateKey,
-	}
+func Ethereum() *EthereumNetwork {
+	return &EthereumNetwork{}
 }
 
 func (a *EthereumNetwork) Name() string {
