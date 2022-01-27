@@ -13,4 +13,8 @@ var (
 	ErrorJSONUnmarshal = func(err error) error {
 		return fmt.Errorf("unable to unmarshal json: %w", err)
 	}
+
+	ErrorUnmarshalTextToBigInt = func(e error) error {
+		return fmt.Errorf("unable to unmarshal text to big.Int: %w", e)
+	}
 )

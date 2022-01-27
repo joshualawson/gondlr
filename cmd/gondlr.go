@@ -3,24 +3,30 @@ package main
 import (
 	"fmt"
 	"github.com/joshualawson/gondlr"
+	"github.com/joshualawson/gondlr/network"
+	"github.com/joshualawson/gondlr/signers"
 	"github.com/joshualawson/gondlr/wallet"
 	log "github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
+	"math/big"
 	"os"
 )
 
 var version = "development"
 
 type config struct {
-	host       string
-	network    string
-	wallet     string
-	timeout    int
-	noConfirm  bool
-	multiplier float64
-	batchSize  int
-	debug      bool
-	indexFile  string
+	host        string
+	network     string
+	wallet      string
+	timeout     int
+	noConfirm   bool
+	multiplier  float64
+	batchSize   int
+	debug       bool
+	indexFile   string
+	priceConfig struct {
+		bytes int
+	}
 }
 
 type command int
@@ -156,6 +162,14 @@ func main() {
 					run(cfg, Price)
 					return nil
 				},
+				Flags: []cli.Flag{
+					&cli.IntFlag{
+						Name:        "bytes",
+						Usage:       "The number of bytes to get the price for",
+						Destination: &cfg.priceConfig.bytes,
+						Required:    true,
+					},
+				},
 			},
 		},
 	}
@@ -168,22 +182,33 @@ func main() {
 }
 
 func run(cfg config, cmd command) {
-	var nw gondlr.Wallet
+	var w gondlr.Wallet
+	var n gondlr.Network
+	var s gondlr.Signer
 
 	switch cfg.network {
 	case "arweave":
-		w, err := os.ReadFile(cfg.wallet)
+		f, err := os.ReadFile(cfg.wallet)
 		if err != nil {
 			panic(err)
 		}
-		nw, err = wallet.Arweave(w)
+
+		w, err = wallet.Arweave(f)
+		if err != nil {
+			panic(err)
+		}
+
+		n = network.Arweave()
+		s, err = signers.Arweave(w.PublicKeyBytes(), w.PublicKeyBytes())
 		if err != nil {
 			panic(err)
 		}
 	}
 
 	g, err := gondlr.New(
-		gondlr.WithNetwork(cfg.network, nw),
+		gondlr.WithNetwork(n),
+		gondlr.WithWallet(w),
+		gondlr.WithSigner(s),
 		gondlr.WithHost(cfg.host),
 	)
 	if err != nil {
@@ -207,6 +232,15 @@ func run(cfg config, cmd command) {
 	case Fund:
 		g.Fund()
 	case Price:
-		g.Price()
+		p, err := g.Price(cfg.priceConfig.bytes)
+		if err != nil {
+			panic(err)
+		}
+		pf := big.NewFloat(float64(p.Int64()))
+		bf := big.NewFloat(network.CurrencyBase[network.NetworkToCurrency[g.Network()]])
+
+		cp := new(big.Float).Quo(pf, bf)
+
+		fmt.Printf("Price for %v bytes in %v: %.12f\n", cfg.priceConfig.bytes, g.Network(), cp)
 	}
 }

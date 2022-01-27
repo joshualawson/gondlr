@@ -4,31 +4,23 @@ import (
 	"crypto"
 	"crypto/ed25519"
 	"crypto/rand"
-	"github.com/joshualawson/gondlr/wallet"
 )
 
 type Ed25519Signer struct {
-	privateKey []byte
+	privateKey ed25519.PrivateKey
+	publicKey  ed25519.PublicKey
 }
 
-func Ed25519(privateKey string) *Ed25519Signer {
+func Ed25519(privateKey []byte, publicKey []byte) *Ed25519Signer {
 	return &Ed25519Signer{
-		privateKey: []byte(privateKey),
+		privateKey: privateKey,
+		publicKey:  publicKey,
 	}
 }
 
-// PublicKey ...
-func (e *Ed25519Signer) PublicKey() wallet.PublicKey {
-	p := ed25519.PrivateKey(e.privateKey)
-	pubKey := p.Public().(ed25519.PublicKey)
-
-	return []byte(pubKey)
-}
-
-// Sign ...
+// Sign calculated the signature of a digest
 func (e *Ed25519Signer) Sign(data []byte) ([]byte, error) {
-	p := ed25519.PrivateKey(e.privateKey)
-	signature, err := p.Sign(rand.Reader, data, crypto.Hash(0))
+	signature, err := e.privateKey.Sign(rand.Reader, data, crypto.Hash(0))
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +28,7 @@ func (e *Ed25519Signer) Sign(data []byte) ([]byte, error) {
 	return signature[:64], nil
 }
 
-// Verify ...
+// Verify verifies a signature
 func (e *Ed25519Signer) Verify(data []byte, sig []byte) bool {
-	return ed25519.Verify(ed25519.PublicKey(e.PublicKey()), data, sig)
+	return ed25519.Verify(e.publicKey, data, sig)
 }

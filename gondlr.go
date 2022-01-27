@@ -2,21 +2,14 @@ package gondlr
 
 import (
 	"fmt"
-	"github.com/joshualawson/gondlr/wallet"
 	"net/http"
 	"net/url"
 	"os"
+	"strings"
 )
 
 type HTTPClient interface {
 	Do(req *http.Request) (*http.Response, error)
-}
-
-type Wallet interface {
-	PublicKeyBytes() []byte
-	PrivateKeyBytes() []byte
-	PublicKey() wallet.PublicKey
-	PrivateKey() wallet.PrivateKey
 }
 
 type Gondlr struct {
@@ -45,6 +38,10 @@ func (g *Gondlr) hostUrl() string {
 	return fmt.Sprintf(g.host.String())
 }
 
+func (g *Gondlr) Network() string {
+	return strings.Title(g.network.Name())
+}
+
 func (g *Gondlr) Withdraw() {
 	fmt.Println("unimplemented")
 
@@ -61,11 +58,6 @@ func (g *Gondlr) UploadDir() {
 	os.Exit(0)
 }
 func (g *Gondlr) Fund() {
-	fmt.Println("unimplemented")
-
-	os.Exit(0)
-}
-func (g *Gondlr) Price() {
 	fmt.Println("unimplemented")
 
 	os.Exit(0)

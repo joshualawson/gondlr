@@ -8,9 +8,9 @@ import (
 )
 
 func TestEd25519_Sign(t *testing.T) {
-	_, pk, err := ed25519.GenerateKey(rand.Reader)
+	pub, priv, err := ed25519.GenerateKey(rand.Reader)
 	assert.NoError(t, err)
-	signer := Ed25519(string(pk))
+	signer := Ed25519(priv, pub)
 
 	data := []byte("test")
 
@@ -18,12 +18,4 @@ func TestEd25519_Sign(t *testing.T) {
 	assert.NoError(t, err)
 
 	signer.Verify(data, sig)
-}
-
-func TestEd25519Signer_PublicKey(t *testing.T) {
-	pub, pk, err := ed25519.GenerateKey(rand.Reader)
-	assert.NoError(t, err)
-	signer := Ed25519(string(pk))
-
-	assert.Equal(t, string(pub), signer.PublicKey().String())
 }

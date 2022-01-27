@@ -1,8 +1,6 @@
 package gondlr
 
 import (
-	"github.com/joshualawson/gondlr/network"
-	"github.com/joshualawson/gondlr/signers"
 	"net/url"
 )
 
@@ -12,26 +10,27 @@ type Option func(g *Gondlr) error
 func WithClient(client HTTPClient) Option {
 	return func(g *Gondlr) error {
 		g.httpClient = client
-
 		return nil
 	}
 }
 
-func WithNetwork(nw string, wallet Wallet) Option {
+func WithNetwork(n Network) Option {
 	return func(g *Gondlr) error {
-		switch nw {
-		case "ethereum":
-		case "arweave":
-			s, err := signers.Arweave(wallet.PrivateKeyBytes(), wallet.PublicKeyBytes())
-			if err != nil {
-				panic(err)
-			}
-			g.network = network.Arweave()
-			g.signer = s
-			g.wallet = wallet
-		case "solana":
-		}
+		g.network = n
+		return nil
+	}
+}
 
+func WithWallet(w Wallet) Option {
+	return func(g *Gondlr) error {
+		g.wallet = w
+		return nil
+	}
+}
+
+func WithSigner(s Signer) Option {
+	return func(g *Gondlr) error {
+		g.signer = s
 		return nil
 	}
 }

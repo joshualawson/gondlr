@@ -14,6 +14,7 @@ type ArweaveSigner struct {
 	publicKey  []byte
 }
 
+// Arweave creates an instance of the Arweave signer
 func Arweave(privateKey []byte, publicKey []byte) (*ArweaveSigner, error) {
 
 	return &ArweaveSigner{
@@ -22,7 +23,7 @@ func Arweave(privateKey []byte, publicKey []byte) (*ArweaveSigner, error) {
 	}, nil
 }
 
-// Sign ...
+// Sign calculated the signature of a digest
 func (a *ArweaveSigner) Sign(data []byte) ([]byte, error) {
 	hashed := sha256.Sum256(data)
 
@@ -44,7 +45,7 @@ func (a *ArweaveSigner) Sign(data []byte) ([]byte, error) {
 	})
 }
 
-// Verify ...
+// Verify verifies a signature
 func (a *ArweaveSigner) Verify(data []byte, sig []byte) bool {
 	hashed := sha256.Sum256(data)
 
