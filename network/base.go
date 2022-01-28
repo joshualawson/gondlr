@@ -10,5 +10,7 @@ var (
 )
 
 const (
-	BaseArweave Base = 1e12
+	BaseArweave  Base = 1e12
+	BaseEthereum Base = 1e18
+	BaseSolana   Base = 1e9
 )
