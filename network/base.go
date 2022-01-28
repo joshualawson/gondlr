@@ -1,20 +1,14 @@
 package network
 
-type Currency string
-type Base int
+type Currency []string
+type Base float64
 
-const (
-	CurrencyArweave    Currency = "winston"
-	CurrencyEthereum   Currency = "wei"
-	CurrencySolanaBase Currency = "lamports"
+var (
+	CurrencyArweave    = Currency{"AR", "winston"}
+	CurrencyEthereum   = Currency{"ETH", "wei"}
+	CurrencySolanaBase = Currency{"SOL", "lamports"}
 )
 
-var NetworkToCurrency = map[string]Currency{
-	"arweave":  CurrencyArweave,
-	"ethereum": CurrencyEthereum,
-	"solana":   CurrencySolanaBase,
-}
-
-var CurrencyBase = map[Currency]float64{
-	CurrencyArweave: 1e12,
-}
+const (
+	BaseArweave Base = 1e12
+)

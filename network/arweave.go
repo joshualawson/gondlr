@@ -23,6 +23,14 @@ func (a *ArweaveNetwork) Name() string {
 	return "arweave"
 }
 
+func (a *ArweaveNetwork) Currency() []string {
+	return CurrencyArweave
+}
+
+func (a *ArweaveNetwork) Base() float64 {
+	return float64(BaseArweave)
+}
+
 func (a *ArweaveNetwork) Tx(transactionID string) (Transaction, error) {
 	t, err := a.ar.Transaction(transactionID)
 	if err != nil {

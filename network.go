@@ -7,6 +7,8 @@ import (
 
 type Network interface {
 	Name() string
+	Currency() []string
+	Base() float64
 	Tx(transactionID string) (network.Transaction, error)
 	CurrentHeight() int
 	Fee() *big.Int

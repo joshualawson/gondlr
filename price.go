@@ -8,14 +8,14 @@ import (
 	"net/http"
 )
 
-func (g *Gondlr) Price(bytes int) (*big.Int, error) {
+func (g *Gondlr) Price(bytes string) (*big.Float, error) {
 	log.
 		WithFields(log.Fields{
 			"host":      g.host.String(),
 			"network":   g.network.Name(),
 			"publicKey": g.wallet.PublicKey(),
 		}).
-		Debugf("GET %sprice/%s/%n", g.host.String(), g.network.Name(), bytes)
+		Debugf("GET %sprice/%s/%s", g.host.String(), g.network.Name(), bytes)
 
 	req, err := http.NewRequest("GET", fmt.Sprintf("%sprice/%s/%v", g.host.String(), g.network.Name(), bytes), nil)
 	if err != nil {
@@ -28,7 +28,7 @@ func (g *Gondlr) Price(bytes int) (*big.Int, error) {
 	}
 	body, err := ioutil.ReadAll(res.Body)
 
-	p := new(big.Int)
+	p := new(big.Float)
 	if err := p.UnmarshalText(body); err != nil {
 		return nil, ErrorUnmarshalTextToBigInt(err)
 	}

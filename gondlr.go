@@ -42,6 +42,14 @@ func (g *Gondlr) Network() string {
 	return strings.Title(g.network.Name())
 }
 
+func (g *Gondlr) Base() float64 {
+	return g.network.Base()
+}
+
+func (g *Gondlr) Currency() []string {
+	return g.network.Currency()
+}
+
 func (g *Gondlr) Withdraw() {
 	fmt.Println("unimplemented")
 

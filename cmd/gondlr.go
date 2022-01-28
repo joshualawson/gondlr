@@ -25,7 +25,7 @@ type config struct {
 	debug       bool
 	indexFile   string
 	priceConfig struct {
-		bytes int
+		bytes string
 	}
 }
 
@@ -163,7 +163,7 @@ func main() {
 					return nil
 				},
 				Flags: []cli.Flag{
-					&cli.IntFlag{
+					&cli.StringFlag{
 						Name:        "bytes",
 						Usage:       "The number of bytes to get the price for",
 						Destination: &cfg.priceConfig.bytes,
@@ -236,11 +236,10 @@ func run(cfg config, cmd command) {
 		if err != nil {
 			panic(err)
 		}
-		pf := big.NewFloat(float64(p.Int64()))
-		bf := big.NewFloat(network.CurrencyBase[network.NetworkToCurrency[g.Network()]])
 
-		cp := new(big.Float).Quo(pf, bf)
+		bf := big.NewFloat(g.Base())
+		cp := new(big.Float).Quo(p, bf)
 
-		fmt.Printf("Price for %v bytes in %v: %.12f\n", cfg.priceConfig.bytes, g.Network(), cp)
+		fmt.Printf("Price for %v bytes in %v: %v %.12f\n", cfg.priceConfig.bytes, g.Network(), g.Currency()[0], cp)
 	}
 }
